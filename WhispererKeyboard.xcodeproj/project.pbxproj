@@ -14,6 +14,8 @@
 		5F5263212AB029F60087E46B /* keyboard.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 5F52631A2AB029F60087E46B /* keyboard.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		5F6738962ACB8BEF00F83932 /* Transcription.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F6738952ACB8BEF00F83932 /* Transcription.swift */; };
 		5F6738982ACB8C8900F83932 /* Audio.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F6738972ACB8C8900F83932 /* Audio.swift */; };
+		D3F98B222EC943A1000B8154 /* KeychainHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3F98B212EC943A1000B8154 /* KeychainHelper.swift */; };
+		D3F98B242EC943A7000B8154 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3F98B232EC943A7000B8154 /* SettingsView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -53,6 +55,8 @@
 		5F5DF0822AB643FA00BAE883 /* keyboard.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = keyboard.entitlements; sourceTree = "<group>"; };
 		5F6738952ACB8BEF00F83932 /* Transcription.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Transcription.swift; sourceTree = "<group>"; };
 		5F6738972ACB8C8900F83932 /* Audio.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Audio.swift; sourceTree = "<group>"; };
+		D3F98B212EC943A1000B8154 /* KeychainHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainHelper.swift; sourceTree = "<group>"; };
+		D3F98B232EC943A7000B8154 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -101,6 +105,8 @@
 				5F52630C2AB027DA0087E46B /* Assets.xcassets */,
 				5F52630E2AB027DA0087E46B /* Preview Content */,
 				5F6738952ACB8BEF00F83932 /* Transcription.swift */,
+				D3F98B212EC943A1000B8154 /* KeychainHelper.swift */,
+				D3F98B232EC943A7000B8154 /* SettingsView.swift */,
 				5F6738972ACB8C8900F83932 /* Audio.swift */,
 			);
 			path = WhispererKeyboard;
@@ -237,9 +243,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D3F98B242EC943A7000B8154 /* SettingsView.swift in Sources */,
 				5F6738982ACB8C8900F83932 /* Audio.swift in Sources */,
 				5F6738962ACB8BEF00F83932 /* Transcription.swift in Sources */,
 				5F5263092AB027D90087E46B /* WhispererKeyboardApp.swift in Sources */,
+				D3F98B222EC943A1000B8154 /* KeychainHelper.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -388,7 +396,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"WhispererKeyboard/Preview Content\"";
-				DEVELOPMENT_TEAM = C9A7ZND9S4;
+				DEVELOPMENT_TEAM = 5WMF5MXK59;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = WhispererKeyboard/Info.plist;
@@ -402,7 +410,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = lcf.WhispererKeyboard;
+				PRODUCT_BUNDLE_IDENTIFIER = lcf.WhispererKeyboard.hame;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -420,7 +428,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"WhispererKeyboard/Preview Content\"";
-				DEVELOPMENT_TEAM = C9A7ZND9S4;
+				DEVELOPMENT_TEAM = 5WMF5MXK59;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = WhispererKeyboard/Info.plist;
@@ -434,7 +442,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = lcf.WhispererKeyboard;
+				PRODUCT_BUNDLE_IDENTIFIER = lcf.WhispererKeyboard.hame;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -448,7 +456,7 @@
 				CODE_SIGN_ENTITLEMENTS = keyboard/keyboard.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = C9A7ZND9S4;
+				DEVELOPMENT_TEAM = 5WMF5MXK59;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = keyboard/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = keyboard;
@@ -459,7 +467,7 @@
 					"@executable_path/../../Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = lcf.WhispererKeyboard.keyboard;
+				PRODUCT_BUNDLE_IDENTIFIER = lcf.WhispererKeyboard.hame.keyboard;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -474,7 +482,7 @@
 				CODE_SIGN_ENTITLEMENTS = keyboard/keyboard.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = C9A7ZND9S4;
+				DEVELOPMENT_TEAM = 5WMF5MXK59;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = keyboard/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = keyboard;
@@ -485,7 +493,7 @@
 					"@executable_path/../../Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = lcf.WhispererKeyboard.keyboard;
+				PRODUCT_BUNDLE_IDENTIFIER = lcf.WhispererKeyboard.hame.keyboard;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				SWIFT_EMIT_LOC_STRINGS = YES;

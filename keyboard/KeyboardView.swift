@@ -21,7 +21,8 @@ struct KeyboardView: View {
                         .padding(.horizontal, 16)
                         .padding(.vertical, 12)
                     }
-                    .buttonStyle(.borderedProminent)
+                    .buttonStyle(.glass)
+                    .tint(.blue)
                 } else {
                     Button(action: onRecordTap) {
                         HStack(spacing: 8) {
@@ -47,7 +48,7 @@ struct KeyboardView: View {
                                 .padding(.horizontal, 16)
                                 .padding(.vertical, 12)
                         }
-                        .buttonStyle(.bordered)
+                        .buttonStyle(.glass)
                         
                         Button(action: onBackspaceTap) {
                             Image(systemName: "delete.backward")
@@ -55,7 +56,7 @@ struct KeyboardView: View {
                                 .padding(.horizontal, 16)
                                 .padding(.vertical, 12)
                         }
-                        .buttonStyle(.bordered)
+                        .buttonStyle(.glass)
                     } else {
                         Button(action: onReturnTap) {
                             Image(systemName: "return")
@@ -84,7 +85,7 @@ struct KeyboardView: View {
                         .font(.system(size: 16, weight: .regular))
                         .padding(5)
                 }
-                .buttonStyle(.bordered)
+                .buttonStyle(.glass)
                 .clipShape(Circle())
             } else {
                 Button(action: onHelpTap) {

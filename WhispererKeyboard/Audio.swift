@@ -33,17 +33,26 @@ class Audio {
     ]
     
     func stop() {
+        print("[Audio] stop() called, isRecording: \(recorder?.isRecording ?? false)")
         recorder?.stop()
+        
+        // DON'T deactivate audio session - we want to stay alive in background
+        // for subsequent recordings without reopening the app
+        print("[Audio] Recording stopped - keeping audio session active for background mode")
     }
     
     func start() {
+        print("[Audio] start() called")
         requestMicrophonePermission() // only requests permissions if not previously granted
         let audioSession = AVAudioSession.sharedInstance()
         do {
+            // Use .record category to enable background audio recording
+            // This allows the app to stay alive in background while recording
             try audioSession.setCategory(.record, mode: .default)
             try audioSession.setActive(true)
+            print("[Audio] Audio session activated for background recording")
         } catch {
-            print("Failed to set up audio session: \(error)")
+            print("[Audio] ERROR: Failed to set up audio session: \(error)")
             return
         }
         
@@ -51,9 +60,9 @@ class Audio {
             recorder = try AVAudioRecorder(url: getFilename(), settings: audioSettings)
             recorder?.delegate = audioRecorderDelegate
             recorder?.record()
-            
+            print("[Audio] Recording started - app will stay alive in background")
         } catch {
-            print("Could not start recording: \(error)")
+            print("[Audio] ERROR: Could not start recording: \(error)")
         }
     }
     

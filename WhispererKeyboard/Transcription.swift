@@ -33,8 +33,9 @@ class Transcription : ObservableObject {
     let sharedDefaults = UserDefaults(suiteName: "group.HameboardSharing")
     
     func transcribe(_ audioFilename : URL) {
+        print("[Transcription] transcribe() called with file: \(audioFilename)")
         guard let apiKey = KeychainHelper.shared.get("openai_api_key"), !apiKey.isEmpty else {
-            print("No API key found in Keychain")
+            print("[Transcription] ERROR: No API key found in Keychain")
             DispatchQueue.main.async {
                 self.status = .error
             }
@@ -42,26 +43,32 @@ class Transcription : ObservableObject {
         }
         
         self.status = .transcribing
+        print("[Transcription] Status set to transcribing")
         do {
-            sendRequestToOpenAI(file: try Data(contentsOf: audioFilename), apiKey: apiKey) {
+            let audioData = try Data(contentsOf: audioFilename)
+            print("[Transcription] Audio file loaded, size: \(audioData.count) bytes")
+            sendRequestToOpenAI(file: audioData, apiKey: apiKey) {
                 (result:Result<String, Error>) in
                 switch result {
                 case .success(let text):
+                    print("[Transcription] ✅ Success! Text: \(text)")
                     // On successful transcription using OpenAI Whisperer, store the results into shared storage
                     // so that the Keyboard extension can find it and insert into the application under edit
                     self.sharedDefaults?.set(text, forKey: "transcribedText")
+                    print("[Transcription] Saved to shared defaults")
                     DispatchQueue.main.async {
                         self.transcribedText = text
                     }
                 case .failure(let failure):
-                    print("\(failure.localizedDescription)")
+                    print("[Transcription] ERROR: \(failure.localizedDescription)")
                 }
                 DispatchQueue.main.async {
                     self.status = .finished
+                    print("[Transcription] Status set to finished")
                 }
             }
         } catch {
-            print(error)
+            print("[Transcription] ERROR loading audio file: \(error)")
             status = .error
             return
         }

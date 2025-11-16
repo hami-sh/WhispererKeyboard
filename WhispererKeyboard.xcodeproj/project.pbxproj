@@ -16,6 +16,8 @@
 		5F6738982ACB8C8900F83932 /* Audio.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F6738972ACB8C8900F83932 /* Audio.swift */; };
 		D3F98B222EC943A1000B8154 /* KeychainHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3F98B212EC943A1000B8154 /* KeychainHelper.swift */; };
 		D3F98B242EC943A7000B8154 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3F98B232EC943A7000B8154 /* SettingsView.swift */; };
+		D3F98B2C2EC95210000B8154 /* TranscriptionBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3F98B2B2EC95210000B8154 /* TranscriptionBridge.swift */; };
+		D3F98B302EC95237000B8154 /* TranscriptionBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3F98B2F2EC95237000B8154 /* TranscriptionBridge.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -57,6 +59,8 @@
 		5F6738972ACB8C8900F83932 /* Audio.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Audio.swift; sourceTree = "<group>"; };
 		D3F98B212EC943A1000B8154 /* KeychainHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainHelper.swift; sourceTree = "<group>"; };
 		D3F98B232EC943A7000B8154 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		D3F98B2B2EC95210000B8154 /* TranscriptionBridge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TranscriptionBridge.swift; sourceTree = "<group>"; };
+		D3F98B2F2EC95237000B8154 /* TranscriptionBridge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = TranscriptionBridge.swift; path = WhispererKeyboard/TranscriptionBridge.swift; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -108,6 +112,7 @@
 				D3F98B212EC943A1000B8154 /* KeychainHelper.swift */,
 				D3F98B232EC943A7000B8154 /* SettingsView.swift */,
 				5F6738972ACB8C8900F83932 /* Audio.swift */,
+				D3F98B2F2EC95237000B8154 /* TranscriptionBridge.swift */,
 			);
 			path = WhispererKeyboard;
 			sourceTree = "<group>";
@@ -125,6 +130,7 @@
 			children = (
 				5F5DF0822AB643FA00BAE883 /* keyboard.entitlements */,
 				5F52631C2AB029F60087E46B /* KeyboardViewController.swift */,
+				D3F98B2B2EC95210000B8154 /* TranscriptionBridge.swift */,
 				5F52631E2AB029F60087E46B /* Info.plist */,
 			);
 			path = keyboard;
@@ -246,6 +252,7 @@
 				D3F98B242EC943A7000B8154 /* SettingsView.swift in Sources */,
 				5F6738982ACB8C8900F83932 /* Audio.swift in Sources */,
 				5F6738962ACB8BEF00F83932 /* Transcription.swift in Sources */,
+				D3F98B302EC95237000B8154 /* TranscriptionBridge.swift in Sources */,
 				5F5263092AB027D90087E46B /* WhispererKeyboardApp.swift in Sources */,
 				D3F98B222EC943A1000B8154 /* KeychainHelper.swift in Sources */,
 			);
@@ -256,6 +263,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				5F52631D2AB029F60087E46B /* KeyboardViewController.swift in Sources */,
+				D3F98B2C2EC95210000B8154 /* TranscriptionBridge.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

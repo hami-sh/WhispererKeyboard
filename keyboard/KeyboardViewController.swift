@@ -68,13 +68,21 @@ class KeyboardViewController: UIInputViewController {
     private func handleRecordTap() {
         print("[Keyboard] Record button tapped")
         
-        guard let url = URL(string: "WhispererKeyboardApp://") else {
-            print("[Keyboard] ERROR: Failed to create URL")
-            return
-        }
+        let bridge = TranscriptionBridge.shared
         
-        print("[Keyboard] Attempting to open URL: \(url)")
-        openURL(url)
+        // Check if main app is already running in background
+        if bridge.isAppRunning() {
+            print("[Keyboard] App is running in background - sending notification")
+            // Signal the background app to start new recording
+            bridge.postNotification(TranscriptionNotification.audioReady)
+        } else {
+            print("[Keyboard] App not running - opening via URL scheme")
+            guard let url = URL(string: "WhispererKeyboardApp://") else {
+                print("[Keyboard] ERROR: Failed to create URL")
+                return
+            }
+            openURL(url)
+        }
     }
     
     private func handleReturnTap() {

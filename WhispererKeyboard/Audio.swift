@@ -50,11 +50,20 @@ class Audio {
         do {
             recorder = try AVAudioRecorder(url: getFilename(), settings: audioSettings)
             recorder?.delegate = audioRecorderDelegate
+            recorder?.isMeteringEnabled = true
             recorder?.record()
             
         } catch {
             print("Could not start recording: \(error)")
         }
+    }
+    
+    func getCurrentPowerLevel() -> Float {
+        guard let recorder = recorder, recorder.isRecording else {
+            return -80.0 // Silent level
+        }
+        recorder.updateMeters()
+        return recorder.averagePower(forChannel: 0)
     }
     
     func getFilename() -> URL {

@@ -4,6 +4,7 @@
 //
 //  Settings page for configuring OpenAI API key
 //
+//
 
 import SwiftUI
 
@@ -17,135 +18,97 @@ struct SettingsView: View {
     
     var body: some View {
         NavigationView {
-            VStack(spacing: 24) {
-                VStack(alignment: .leading, spacing: 12) {
-                    Text("OpenAI API Key")
-                        .font(.headline)
-                        .foregroundColor(.primary)
-                    
+            Form {
+                // API Key Section
+                Section {
                     SecureField("Enter your API key", text: $apiKey)
-                        .textFieldStyle(.roundedBorder)
                         .textContentType(.password)
                         .autocapitalization(.none)
                         .disableAutocorrection(true)
                     
-                    if showingSaved {
-                        HStack {
-                            Image(systemName: "checkmark.circle.fill")
-                                .foregroundColor(.green)
-                            Text("API Key saved securely")
-                                .font(.subheadline)
-                                .foregroundColor(.green)
-                        }
+                    Button("Save API Key") {
+                        saveAPIKey()
                     }
-                }
-                .padding(.horizontal)
-                
-                Button(action: saveAPIKey) {
-                    Text("Save API Key")
-                        .font(.headline)
-                        .foregroundColor(.white)
-                        .frame(maxWidth: .infinity)
-                        .padding(.vertical, 14)
-                        .background(apiKey.isEmpty ? Color.gray : Color.blue)
-                        .cornerRadius(10)
-                }
-                .disabled(apiKey.isEmpty)
-                .padding(.horizontal)
-                
-                VStack(alignment: .leading, spacing: 12) {
-                    Text("Custom Vocabulary")
-                        .font(.headline)
-                        .foregroundColor(.primary)
+                    .disabled(apiKey.isEmpty)
                     
-                    Text("Add words you commonly use that might get misrecognized during transcription. These will help improve accuracy.")
-                        .font(.subheadline)
-                        .foregroundColor(.secondary)
-                    
+                    if showingSaved {
+                        Label("API Key saved securely", systemImage: "checkmark.circle.fill")
+                            .foregroundStyle(.green)
+                    }
+                } header: {
+                    Text("OpenAI API Key")
+                } footer: {
+                    Text("Get your API key from OpenAI and paste it above.")
+                }
+                
+                // Custom Vocabulary Section
+                Section {
                     HStack {
                         TextField("Enter a word or phrase", text: $newWord)
-                            .textFieldStyle(.roundedBorder)
                             .autocapitalization(.none)
                             .disableAutocorrection(true)
                         
                         Button(action: addWord) {
-                            Image(systemName: "plus.circle.fill")
-                                .font(.title2)
-                                .foregroundColor(newWord.isEmpty ? .gray : .blue)
+                            Image(systemName: showingVocabularySaved ? "checkmark.circle.fill" : "plus.circle.fill")
+                                .foregroundStyle(showingVocabularySaved ? .green : (newWord.isEmpty ? .gray : .blue))
+                                .contentTransition(.symbolEffect(.replace))
                         }
                         .disabled(newWord.isEmpty)
                     }
-                    
-                    if showingVocabularySaved {
-                        HStack {
-                            Image(systemName: "checkmark.circle.fill")
-                                .foregroundColor(.green)
-                            Text("Vocabulary saved")
-                                .font(.subheadline)
-                                .foregroundColor(.green)
-                        }
-                    }
-                    
-                    if !customVocabulary.isEmpty {
-                        VStack(alignment: .leading, spacing: 8) {
-                            Text("Saved Words (\(customVocabulary.count))")
-                                .font(.subheadline)
-                                .fontWeight(.semibold)
-                                .foregroundColor(.primary)
-                            
-                            ScrollView {
-                                LazyVStack(alignment: .leading, spacing: 6) {
-                                    ForEach(customVocabulary.indices, id: \.self) { index in
-                                        HStack {
-                                            Text(customVocabulary[index])
-                                                .font(.subheadline)
-                                            Spacer()
-                                            Button(action: {
-                                                removeWord(at: index)
-                                            }) {
-                                                Image(systemName: "xmark.circle.fill")
-                                                    .foregroundColor(.red)
-                                                    .font(.subheadline)
-                                            }
-                                        }
-                                        .padding(.vertical, 4)
-                                    }
+                } header: {
+                    Text("Custom Vocabulary")
+                } footer: {
+                    Text("Add words you commonly use that might get misrecognized during transcription. These will help improve accuracy.")
+                }
+                
+                // Vocabulary List
+                if !customVocabulary.isEmpty {
+                    Section {
+                        ForEach(customVocabulary.indices, id: \.self) { index in
+                            HStack {
+                                Text(customVocabulary[index])
+                                Spacer()
+                                Button(action: {
+                                    removeWord(at: index)
+                                }) {
+                                    Image(systemName: "trash")
+                                        .foregroundStyle(.red)
                                 }
                             }
-                            .frame(maxHeight: 200)
-                            .padding(8)
-                            .background(Color.secondary.opacity(0.1))
-                            .cornerRadius(8)
                         }
+                        .onDelete { indexSet in
+                            customVocabulary.remove(atOffsets: indexSet)
+                            saveVocabulary()
+                        }
+                    } header: {
+                        Text("Saved Words (\(customVocabulary.count))")
                     }
                 }
-                .padding(.horizontal)
                 
-                VStack(alignment: .leading, spacing: 8) {
+                // Getting Started Section
+                Section {
+                    VStack(alignment: .leading, spacing: 8) {
+                        Text("1. Get your API key from OpenAI")
+                        Text("2. Paste it above and save")
+                        Text("3. Add custom vocabulary words (optional)")
+                        Text("4. Start recording with the keyboard")
+                    }
+                    .font(.footnote)
+                    .foregroundStyle(.secondary)
+                } header: {
                     Text("How to get started")
-                        .font(.headline)
-                        .foregroundColor(.primary)
-                    
-                    VStack(alignment: .leading, spacing: 6) {
-                        Label("Get your API key from OpenAI", systemImage: "1.circle.fill")
-                        Label("Paste it above and save", systemImage: "2.circle.fill")
-                        Label("Add custom vocabulary words (optional)", systemImage: "3.circle.fill")
-                        Label("Start recording with the keyboard", systemImage: "4.circle.fill")
-                    }
-                    .font(.subheadline)
-                    .foregroundColor(.secondary)
                 }
-                .padding(.horizontal)
-                
-                Spacer()
             }
-            .padding(.vertical)
             .navigationTitle("Settings")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
-                    Button("Done") {
+                    Button {
                         dismiss()
+                    } label: {
+                        Image(systemName: "checkmark")
+                            .font(.system(size: 17, weight: .semibold))
+                            .foregroundStyle(.blue)
                     }
                 }
             }
@@ -184,9 +147,13 @@ struct SettingsView: View {
     
     private func saveVocabulary() {
         Transcription.saveCustomVocabulary(customVocabulary)
-        showingVocabularySaved = true
+        withAnimation {
+            showingVocabularySaved = true
+        }
         DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-            showingVocabularySaved = false
+            withAnimation {
+                showingVocabularySaved = false
+            }
         }
     }
 }

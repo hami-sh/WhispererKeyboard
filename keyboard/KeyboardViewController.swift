@@ -29,6 +29,9 @@ class KeyboardViewController: UIInputViewController {
             },
             onReturnTap: { [weak self] in
                 self?.handleReturnTap()
+            },
+            onBackspaceTap: { [weak self] in
+                self?.handleBackspaceTap()
             }
         )
         
@@ -82,6 +85,11 @@ class KeyboardViewController: UIInputViewController {
         textDocumentProxy.insertText("\n")
     }
     
+    private func handleBackspaceTap() {
+        print("[Keyboard] Backspace button tapped")
+        textDocumentProxy.deleteBackward()
+    }
+    
     @discardableResult
     private func openURL(_ url: URL) -> Bool {
         var responder: UIResponder? = self
@@ -107,6 +115,7 @@ class KeyboardViewController: UIInputViewController {
 struct KeyboardView: View {
     let onRecordTap: () -> Void
     let onReturnTap: () -> Void
+    let onBackspaceTap: () -> Void
     
     var body: some View {
         VStack(spacing: 8) {
@@ -140,22 +149,40 @@ struct KeyboardView: View {
                 .tint(.blue)
             }
 
-            if #available(iOS 26.0, *) {
-                Button(action: onReturnTap) {
-                    Image(systemName: "return")
-                        .font(.system(size: 16, weight: .regular))
-                        .padding(.horizontal, 16)
-                        .padding(.vertical, 12)
+            HStack(spacing: 8) {
+                if #available(iOS 26.0, *) {
+                    Button(action: onReturnTap) {
+                        Image(systemName: "return")
+                            .font(.system(size: 16, weight: .regular))
+                            .padding(.horizontal, 16)
+                            .padding(.vertical, 12)
+                    }
+                    .buttonStyle(.glass)
+                    
+                    Button(action: onBackspaceTap) {
+                        Image(systemName: "delete.backward")
+                            .font(.system(size: 16, weight: .regular))
+                            .padding(.horizontal, 16)
+                            .padding(.vertical, 12)
+                    }
+                    .buttonStyle(.glass)
+                } else {
+                    Button(action: onReturnTap) {
+                        Image(systemName: "return")
+                            .font(.system(size: 16, weight: .regular))
+                            .padding(.horizontal, 16)
+                            .padding(.vertical, 12)
+                    }
+                    .buttonStyle(.bordered)
+                    
+                    Button(action: onBackspaceTap) {
+                        Image(systemName: "delete.backward")
+                            .font(.system(size: 16, weight: .regular))
+                            .padding(.horizontal, 16)
+                            .padding(.vertical, 12)
+                    }
+                    .buttonStyle(.bordered)
                 }
-                .buttonStyle(.glass)
-            } else {
-                Button(action: onReturnTap) {
-                    Image(systemName: "return")
-                        .font(.system(size: 16, weight: .regular))
-                        .padding(.horizontal, 16)
-                        .padding(.vertical, 12)
-                }
-                .buttonStyle(.bordered)
             }
         }
         .padding(.horizontal, 12)

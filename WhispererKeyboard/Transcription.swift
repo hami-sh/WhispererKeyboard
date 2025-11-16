@@ -8,7 +8,7 @@
 import Foundation
 
 
-/// Perform transcription of a given audio file using OpenAI Whisperer API
+/// Perform transcription of a given audio file using OpenAI GPT-4o Transcribe API
 /// Results are stored in shared group.HameboardSharing storage
 ///
 /// Maintains internal "status" property to show status of transcription, useful when transcription takes a few seconds
@@ -92,9 +92,15 @@ class Transcription : ObservableObject {
         formData.append(file)
         formData.append("\r\n".data(using: .utf8)!)
         
-        // This specifies the model to use "whisper-1"
+        // This specifies the model to use "gpt-4o-transcribe"
         formData.append("--\(boundary)\r\n".data(using: .utf8)!)
-        formData.append("Content-Disposition: form-data; name=\"model\"\r\n\r\nwhisper-1\r\n".data(using: .utf8)!)
+        formData.append("Content-Disposition: form-data; name=\"model\"\r\n\r\ngpt-4o-transcribe\r\n".data(using: .utf8)!)
+        
+        // Add prompt with custom vocabulary if available
+        if let prompt = generatePromptWithVocabulary() {
+            formData.append("--\(boundary)\r\n".data(using: .utf8)!)
+            formData.append("Content-Disposition: form-data; name=\"prompt\"\r\n\r\n\(prompt)\r\n".data(using: .utf8)!)
+        }
         
         formData.append("--\(boundary)--\r\n".data(using: .utf8)!)
         
@@ -102,14 +108,91 @@ class Transcription : ObservableObject {
         
         // Below makes the http request and passes the resulting text to the callback function
         let task = URLSession.shared.dataTask(with: request) { (data, response, error) in
+            if let error = error {
+                print("API request error: \(error.localizedDescription)")
+                completion(.failure(error))
+                return
+            }
+            
+            guard let data = data else {
+                let noDataError = NSError(domain: "Transcription", code: -1, userInfo: [NSLocalizedDescriptionKey: "No data received from API"])
+                completion(.failure(noDataError))
+                return
+            }
+            
+            // Log response for debugging
+            if let httpResponse = response as? HTTPURLResponse {
+                print("API response status: \(httpResponse.statusCode)")
+                if httpResponse.statusCode != 200 {
+                    if let errorString = String(data: data, encoding: .utf8) {
+                        print("API error response: \(errorString)")
+                    }
+                }
+            }
+            
             do {
-                let response = try JSONDecoder().decode(WhispererResponse.self, from: data!)
+                let response = try JSONDecoder().decode(WhispererResponse.self, from: data)
                 completion(.success(response.text))
             } catch let decodingError {
-                
+                // Log the raw response for debugging
+                if let responseString = String(data: data, encoding: .utf8) {
+                    print("Failed to decode response. Raw response: \(responseString)")
+                }
                 completion(.failure(decodingError))
             }
         }
         task.resume()
+    }
+    
+    // MARK: - Custom Vocabulary Management
+    
+    /// Load custom vocabulary from UserDefaults
+    private func loadCustomVocabulary() -> [String]? {
+        guard let sharedDefaults = sharedDefaults,
+              let vocabularyData = sharedDefaults.data(forKey: "custom_vocabulary"),
+              let vocabulary = try? JSONDecoder().decode([String].self, from: vocabularyData) else {
+            return nil
+        }
+        return vocabulary.filter { !$0.trimmingCharacters(in: .whitespaces).isEmpty }
+    }
+    
+    /// Generate a prompt string that includes custom vocabulary terms
+    private func generatePromptWithVocabulary() -> String? {
+        guard let vocabulary = loadCustomVocabulary(), !vocabulary.isEmpty else {
+            return nil
+        }
+        
+        // Format vocabulary list
+        let vocabularyList: String
+        if vocabulary.count == 1 {
+            vocabularyList = vocabulary[0]
+        } else if vocabulary.count == 2 {
+            vocabularyList = "\(vocabulary[0]) and \(vocabulary[1])"
+        } else {
+            let allButLast = vocabulary.dropLast().joined(separator: ", ")
+            vocabularyList = "\(allButLast), and \(vocabulary.last!)"
+        }
+        
+        // Create prompt with context about specialized terms
+        return "The following specialized terms are commonly used in this recording: \(vocabularyList)."
+    }
+    
+    /// Save custom vocabulary to UserDefaults
+    static func saveCustomVocabulary(_ vocabulary: [String]) {
+        let sharedDefaults = UserDefaults(suiteName: "group.HameboardSharing")
+        if let vocabularyData = try? JSONEncoder().encode(vocabulary) {
+            sharedDefaults?.set(vocabularyData, forKey: "custom_vocabulary")
+            sharedDefaults?.synchronize()
+        }
+    }
+    
+    /// Get custom vocabulary from UserDefaults
+    static func getCustomVocabulary() -> [String] {
+        let sharedDefaults = UserDefaults(suiteName: "group.HameboardSharing")
+        guard let vocabularyData = sharedDefaults?.data(forKey: "custom_vocabulary"),
+              let vocabulary = try? JSONDecoder().decode([String].self, from: vocabularyData) else {
+            return []
+        }
+        return vocabulary
     }
 }

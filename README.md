@@ -1,12 +1,46 @@
-Experimental project created for personal use.
+# WhispererKeyboard
 
-### Custom iOS keyboard using OpenAI Whisperer API for speech-to-text conversion
+An enhanced iOS custom keyboard using OpenAI's `gpt-4o-transcribe` API for speech-to-text conversion.
 
-1. Captures audio from microphone
-2. sends to OpenAI API for transcription
-3. Inserts result into the active text edit 
+## Features
 
+- **Voice-to-Text Transcription**: Captures audio from the microphone and sends it to OpenAI's `gpt-4o-transcribe` API for accurate transcription
+- **Modern iOS 26 UI**: Updated interface with contemporary design patterns
+- **Custom Dictionary**: Add frequently used words and phrases for better transcription accuracy
+- **Enhanced Keyboard**: Updated keyboard layout and functionality improvements
 
-### Example using in Notes, comparison with iOS built-in transcription 
-<img src="./example.jpg" width="400"/>
+## How It Works
 
+1. Tap the microphone button on the keyboard
+2. Speak your message
+3. Switch back to the app you were using
+4. Transcribed text is automatically inserted into the active text field
+
+## Screenshots
+
+<p align="center">
+  <img src="./screenshots/keyboard.png" width="200" alt="Keyboard View"/>
+  <img src="./screenshots/microphone.png" width="200" alt="Microphone View"/>
+  <img src="./screenshots/transcription.png" width="200" alt="Transcription View"/>
+  <img src="./screenshots/settings.png" width="200" alt="Settings View"/>
+</p>
+
+## Installation
+
+1. Clone this repository
+2. Open `WhispererKeyboard.xcodeproj` in Xcode
+3. Add your OpenAI API key in the settings
+4. Build and install on your iOS device
+5. Enable the keyboard in Settings > General > Keyboard > Keyboards > Add New Keyboard
+
+## Requirements
+
+- iOS 26.0+
+- Xcode 26.0+
+- OpenAI API key
+
+> **Note:** This project is forked from [lcf/WhispererKeyboard](https://github.com/lcf/WhispererKeyboard.git) with significant improvements for usability and modern iOS compatibility.
+
+## License
+
+See [LICENSE](LICENSE) for details.

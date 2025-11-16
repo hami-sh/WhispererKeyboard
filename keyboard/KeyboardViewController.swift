@@ -20,14 +20,22 @@ class KeyboardViewController: UIInputViewController {
         super.viewDidLoad()
         print("[Keyboard] viewDidLoad called")
         
+        // Make the main view background transparent
+        view.backgroundColor = .clear
+        
         let keyboardView = KeyboardView(
             onRecordTap: { [weak self] in
                 self?.handleRecordTap()
+            },
+            onReturnTap: { [weak self] in
+                self?.handleReturnTap()
             }
         )
         
         let hostingController = UIHostingController(rootView: keyboardView)
         hostingController.view.translatesAutoresizingMaskIntoConstraints = false
+        // Make the hosting controller's view background transparent
+        hostingController.view.backgroundColor = .clear
         
         addChild(hostingController)
         view.addSubview(hostingController.view)
@@ -69,6 +77,11 @@ class KeyboardViewController: UIInputViewController {
         openURL(url)
     }
     
+    private func handleReturnTap() {
+        print("[Keyboard] Return button tapped")
+        textDocumentProxy.insertText("\n")
+    }
+    
     @discardableResult
     private func openURL(_ url: URL) -> Bool {
         var responder: UIResponder? = self
@@ -93,24 +106,60 @@ class KeyboardViewController: UIInputViewController {
 
 struct KeyboardView: View {
     let onRecordTap: () -> Void
+    let onReturnTap: () -> Void
     
     var body: some View {
-        ZStack {
-//            Color(UIColor.systemBackground)
-//                .ignoresSafeArea()
-            
-            Button(action: onRecordTap) {
-                HStack {
-                    Image(systemName: "mic.fill")
-                    Text("Record audio")
+        VStack(spacing: 8) {
+            if #available(iOS 26.0, *) {
+                Button(action: onRecordTap) {
+                    HStack(spacing: 8) {
+                        Image(systemName: "mic.fill")
+                            .font(.system(size: 16))
+                        Text("Record")
+                            .font(.system(size: 16, weight: .regular))
+                    }
+                    .frame(maxWidth: .infinity)
+                    .padding(.horizontal, 16)
+                    .padding(.vertical, 12)
                 }
-                .font(.system(size: 17, weight: .medium))
-                .padding(.horizontal, 24)
-                .padding(.vertical, 12)
-                .background(Color.accentColor)
-                .foregroundColor(.white)
-                .cornerRadius(10)
+                .buttonStyle(.glass)
+            } else {
+                Button(action: onRecordTap) {
+                    HStack(spacing: 8) {
+                        Image(systemName: "mic.fill")
+                            .font(.system(size: 16))
+                        Text("Record")
+                            .font(.system(size: 16, weight: .regular))
+                    }
+                    .frame(maxWidth: .infinity)
+                    .padding(.horizontal, 16)
+                    .padding(.vertical, 12)
+                    .foregroundColor(.white)
+                }
+                .buttonStyle(.borderedProminent)
+                .tint(.blue)
+            }
+
+            if #available(iOS 26.0, *) {
+                Button(action: onReturnTap) {
+                    Image(systemName: "return")
+                        .font(.system(size: 16, weight: .regular))
+                        .padding(.horizontal, 16)
+                        .padding(.vertical, 12)
+                }
+                .buttonStyle(.glass)
+            } else {
+                Button(action: onReturnTap) {
+                    Image(systemName: "return")
+                        .font(.system(size: 16, weight: .regular))
+                        .padding(.horizontal, 16)
+                        .padding(.vertical, 12)
+                }
+                .buttonStyle(.bordered)
             }
         }
+        .padding(.horizontal, 12)
+        .padding(.vertical, 8)
+        .background(.clear)
     }
 }

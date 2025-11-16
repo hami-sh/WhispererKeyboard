@@ -14,38 +14,60 @@ struct SettingsView: View {
     
     var body: some View {
         NavigationView {
-            Form {
-                Section(header: Text("OpenAI API Key")) {
+            VStack(spacing: 24) {
+                VStack(alignment: .leading, spacing: 12) {
+                    Text("OpenAI API Key")
+                        .font(.headline)
+                        .foregroundColor(.primary)
+                    
                     SecureField("Enter your API key", text: $apiKey)
+                        .textFieldStyle(.roundedBorder)
                         .textContentType(.password)
                         .autocapitalization(.none)
                         .disableAutocorrection(true)
                     
-                    Button("Save API Key") {
-                        KeychainHelper.shared.save(apiKey, forKey: "openai_api_key")
-                        showingSaved = true
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-                            showingSaved = false
+                    if showingSaved {
+                        HStack {
+                            Image(systemName: "checkmark.circle.fill")
+                                .foregroundColor(.green)
+                            Text("API Key saved securely")
+                                .font(.subheadline)
+                                .foregroundColor(.green)
                         }
                     }
-                    .disabled(apiKey.isEmpty)
-                    
-                    if showingSaved {
-                        Text("✓ API Key saved securely")
-                            .foregroundColor(.green)
-                            .font(.caption)
-                    }
                 }
+                .padding(.horizontal)
                 
-                Section(header: Text("Instructions")) {
-                    Text("1. Get your API key from OpenAI")
-                    Text("2. Paste it in the field above")
-                    Text("3. Click Save")
-                    Text("4. Use the keyboard to record and transcribe")
+                Button(action: saveAPIKey) {
+                    Text("Save API Key")
+                        .font(.headline)
+                        .foregroundColor(.white)
+                        .frame(maxWidth: .infinity)
+                        .padding(.vertical, 14)
+                        .background(apiKey.isEmpty ? Color.gray : Color.blue)
+                        .cornerRadius(10)
                 }
-                .font(.caption)
-                .foregroundColor(.secondary)
+                .disabled(apiKey.isEmpty)
+                .padding(.horizontal)
+                
+                VStack(alignment: .leading, spacing: 8) {
+                    Text("How to get started")
+                        .font(.headline)
+                        .foregroundColor(.primary)
+                    
+                    VStack(alignment: .leading, spacing: 6) {
+                        Label("Get your API key from OpenAI", systemImage: "1.circle.fill")
+                        Label("Paste it above and save", systemImage: "2.circle.fill")
+                        Label("Start recording with the keyboard", systemImage: "3.circle.fill")
+                    }
+                    .font(.subheadline)
+                    .foregroundColor(.secondary)
+                }
+                .padding(.horizontal)
+                
+                Spacer()
             }
+            .padding(.vertical)
             .navigationTitle("Settings")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
@@ -60,6 +82,14 @@ struct SettingsView: View {
             if let savedKey = KeychainHelper.shared.get("openai_api_key") {
                 apiKey = savedKey
             }
+        }
+    }
+    
+    private func saveAPIKey() {
+        KeychainHelper.shared.save(apiKey, forKey: "openai_api_key")
+        showingSaved = true
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+            showingSaved = false
         }
     }
 }

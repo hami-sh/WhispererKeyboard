@@ -19,10 +19,11 @@ An enhanced iOS custom keyboard using OpenAI's `gpt-4o-transcribe` API for speec
 ## Screenshots
 
 <p align="center">
-  <img src="./screenshots/keyboard.png" width="200" alt="Keyboard View"/>
-  <img src="./screenshots/microphone.png" width="200" alt="Microphone View"/>
-  <img src="./screenshots/transcription.png" width="200" alt="Transcription View"/>
-  <img src="./screenshots/settings.png" width="200" alt="Settings View"/>
+  <img src="docs/home.PNG" width="200" alt="Home View" style="margin: 0 10px;"/>
+  <img src="docs/transcribing.PNG" width="200" alt="Transcribing View" style="margin: 0 10px;"/>
+  <img src="docs/complete.PNG" width="200" alt="Complete View" style="margin: 0 10px;"/>
+  <img src="docs/notes.png" width="200" alt="Notes View" style="margin: 0 10px;"/>
+  <img src="docs/settings.PNG" width="200" alt="Settings View" style="margin: 0 10px;"/>
 </p>
 
 ## Installation

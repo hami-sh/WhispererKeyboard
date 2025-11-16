@@ -32,6 +32,9 @@ class KeyboardViewController: UIInputViewController {
             },
             onBackspaceTap: { [weak self] in
                 self?.handleBackspaceTap()
+            },
+            onHelpTap: { [weak self] in
+                self?.handleHelpTap()
             }
         )
         
@@ -61,6 +64,8 @@ class KeyboardViewController: UIInputViewController {
         if let transcribedText = sharedDefaults?.string(forKey: "transcribedText") {
             print("[Keyboard] Found transcribed text: \(transcribedText)")
             textDocumentProxy.insertText(transcribedText)
+            // Track word count from inserted text
+            StatsManager.shared.addWordsFromText(transcribedText)
             sharedDefaults?.removeObject(forKey: "transcribedText")
             print("[Keyboard] Text inserted and cleared from shared defaults")
         } else {
@@ -90,6 +95,18 @@ class KeyboardViewController: UIInputViewController {
         textDocumentProxy.deleteBackward()
     }
     
+    private func handleHelpTap() {
+        print("[Keyboard] Help button tapped")
+        
+        guard let url = URL(string: "WhispererKeyboardApp://help") else {
+            print("[Keyboard] ERROR: Failed to create help URL")
+            return
+        }
+        
+        print("[Keyboard] Attempting to open help URL: \(url)")
+        openURL(url)
+    }
+    
     @discardableResult
     private func openURL(_ url: URL) -> Bool {
         var responder: UIResponder? = self
@@ -116,73 +133,97 @@ struct KeyboardView: View {
     let onRecordTap: () -> Void
     let onReturnTap: () -> Void
     let onBackspaceTap: () -> Void
+    let onHelpTap: () -> Void
     
     var body: some View {
-        VStack(spacing: 8) {
-            if #available(iOS 26.0, *) {
-                Button(action: onRecordTap) {
-                    HStack(spacing: 8) {
-                        Image(systemName: "mic.fill")
-                            .font(.system(size: 16))
-                        Text("Record")
-                            .font(.system(size: 16, weight: .regular))
-                    }
-                    .frame(maxWidth: .infinity)
-                    .padding(.horizontal, 16)
-                    .padding(.vertical, 12)
-                }
-                .buttonStyle(.glass)
-            } else {
-                Button(action: onRecordTap) {
-                    HStack(spacing: 8) {
-                        Image(systemName: "mic.fill")
-                            .font(.system(size: 16))
-                        Text("Record")
-                            .font(.system(size: 16, weight: .regular))
-                    }
-                    .frame(maxWidth: .infinity)
-                    .padding(.horizontal, 16)
-                    .padding(.vertical, 12)
-                    .foregroundColor(.white)
-                }
-                .buttonStyle(.borderedProminent)
-                .tint(.blue)
-            }
-
-            HStack(spacing: 8) {
+        ZStack(alignment: .bottomTrailing) {
+            // Main centered content
+            VStack(spacing: 8) {
+                // Record button (primary)
                 if #available(iOS 26.0, *) {
-                    Button(action: onReturnTap) {
-                        Image(systemName: "return")
-                            .font(.system(size: 16, weight: .regular))
-                            .padding(.horizontal, 16)
-                            .padding(.vertical, 12)
+                    Button(action: onRecordTap) {
+                        HStack(spacing: 8) {
+                            Image(systemName: "mic.fill")
+                                .font(.system(size: 16))
+                            Text("Record")
+                                .font(.system(size: 16, weight: .regular))
+                        }
+                        .padding(.horizontal, 16)
+                        .padding(.vertical, 12)
                     }
-                    .buttonStyle(.glass)
-                    
-                    Button(action: onBackspaceTap) {
-                        Image(systemName: "delete.backward")
-                            .font(.system(size: 16, weight: .regular))
-                            .padding(.horizontal, 16)
-                            .padding(.vertical, 12)
-                    }
-                    .buttonStyle(.glass)
+                    .buttonStyle(.borderedProminent)
                 } else {
-                    Button(action: onReturnTap) {
-                        Image(systemName: "return")
-                            .font(.system(size: 16, weight: .regular))
-                            .padding(.horizontal, 16)
-                            .padding(.vertical, 12)
+                    Button(action: onRecordTap) {
+                        HStack(spacing: 8) {
+                            Image(systemName: "mic.fill")
+                                .font(.system(size: 16))
+                            Text("Record")
+                                .font(.system(size: 16, weight: .regular))
+                        }
+                        .padding(.horizontal, 16)
+                        .padding(.vertical, 12)
+                        .foregroundColor(.white)
                     }
-                    .buttonStyle(.bordered)
-                    
-                    Button(action: onBackspaceTap) {
-                        Image(systemName: "delete.backward")
-                            .font(.system(size: 16, weight: .regular))
-                            .padding(.horizontal, 16)
-                            .padding(.vertical, 12)
-                    }
-                    .buttonStyle(.bordered)
+                    .buttonStyle(.borderedProminent)
+                    .tint(.blue)
                 }
+
+                // Return and Backspace buttons
+                HStack(spacing: 8) {
+                    if #available(iOS 26.0, *) {
+                        Button(action: onReturnTap) {
+                            Image(systemName: "return")
+                                .font(.system(size: 16, weight: .regular))
+                                .padding(.horizontal, 16)
+                                .padding(.vertical, 12)
+                        }
+                        .buttonStyle(.bordered)
+                        
+                        Button(action: onBackspaceTap) {
+                            Image(systemName: "delete.backward")
+                                .font(.system(size: 16, weight: .regular))
+                                .padding(.horizontal, 16)
+                                .padding(.vertical, 12)
+                        }
+                        .buttonStyle(.bordered)
+                    } else {
+                        Button(action: onReturnTap) {
+                            Image(systemName: "return")
+                                .font(.system(size: 16, weight: .regular))
+                                .padding(.horizontal, 16)
+                                .padding(.vertical, 12)
+                        }
+                        .buttonStyle(.bordered)
+                        
+                        Button(action: onBackspaceTap) {
+                            Image(systemName: "delete.backward")
+                                .font(.system(size: 16, weight: .regular))
+                                .padding(.horizontal, 16)
+                                .padding(.vertical, 12)
+                        }
+                        .buttonStyle(.bordered)
+                    }
+                }
+            }
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            
+            // Help button anchored to bottom right (outside centered content)
+            if #available(iOS 26.0, *) {
+                Button(action: onHelpTap) {
+                    Image(systemName: "questionmark.circle")
+                        .font(.system(size: 16, weight: .regular))
+                        .padding(.horizontal, 12)
+                        .padding(.vertical, 8)
+                }
+                .buttonStyle(.bordered)
+            } else {
+                Button(action: onHelpTap) {
+                    Image(systemName: "questionmark.circle")
+                        .font(.system(size: 16, weight: .regular))
+                        .padding(.horizontal, 12)
+                        .padding(.vertical, 8)
+                }
+                .buttonStyle(.bordered)
             }
         }
         .padding(.horizontal, 12)

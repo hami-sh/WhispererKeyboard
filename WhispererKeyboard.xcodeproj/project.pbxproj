@@ -17,6 +17,9 @@
 		D3F98B222EC943A1000B8154 /* KeychainHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3F98B212EC943A1000B8154 /* KeychainHelper.swift */; };
 		D3F98B242EC943A7000B8154 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3F98B232EC943A7000B8154 /* SettingsView.swift */; };
 		D3F98B322EC95AB5000B8154 /* SoundVisualizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3F98B312EC95AB5000B8154 /* SoundVisualizer.swift */; };
+		D3F98B382EC98E5B000B8154 /* StatsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3F98B372EC98E5B000B8154 /* StatsManager.swift */; };
+		D3F98B392EC98E5B000B8154 /* StatsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3F98B372EC98E5B000B8154 /* StatsManager.swift */; };
+		D3F98B3B2EC98F34000B8154 /* StatsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3F98B3A2EC98F34000B8154 /* StatsView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -59,6 +62,8 @@
 		D3F98B212EC943A1000B8154 /* KeychainHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainHelper.swift; sourceTree = "<group>"; };
 		D3F98B232EC943A7000B8154 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		D3F98B312EC95AB5000B8154 /* SoundVisualizer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SoundVisualizer.swift; sourceTree = "<group>"; };
+		D3F98B372EC98E5B000B8154 /* StatsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatsManager.swift; sourceTree = "<group>"; };
+		D3F98B3A2EC98F34000B8154 /* StatsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatsView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -104,12 +109,14 @@
 				5F5DF0812AB6398C00BAE883 /* WhispererKeyboard.entitlements */,
 				5F5263342AB17A300087E46B /* Info.plist */,
 				5F5263082AB027D90087E46B /* WhispererKeyboardApp.swift */,
+				D3F98B3A2EC98F34000B8154 /* StatsView.swift */,
 				D3F98B312EC95AB5000B8154 /* SoundVisualizer.swift */,
 				5F52630C2AB027DA0087E46B /* Assets.xcassets */,
 				5F52630E2AB027DA0087E46B /* Preview Content */,
 				5F6738952ACB8BEF00F83932 /* Transcription.swift */,
 				D3F98B212EC943A1000B8154 /* KeychainHelper.swift */,
 				D3F98B232EC943A7000B8154 /* SettingsView.swift */,
+				D3F98B372EC98E5B000B8154 /* StatsManager.swift */,
 				5F6738972ACB8C8900F83932 /* Audio.swift */,
 			);
 			path = WhispererKeyboard;
@@ -250,7 +257,9 @@
 				D3F98B322EC95AB5000B8154 /* SoundVisualizer.swift in Sources */,
 				5F6738982ACB8C8900F83932 /* Audio.swift in Sources */,
 				5F6738962ACB8BEF00F83932 /* Transcription.swift in Sources */,
+				D3F98B3B2EC98F34000B8154 /* StatsView.swift in Sources */,
 				5F5263092AB027D90087E46B /* WhispererKeyboardApp.swift in Sources */,
+				D3F98B382EC98E5B000B8154 /* StatsManager.swift in Sources */,
 				D3F98B222EC943A1000B8154 /* KeychainHelper.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -260,6 +269,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				5F52631D2AB029F60087E46B /* KeyboardViewController.swift in Sources */,
+				D3F98B392EC98E5B000B8154 /* StatsManager.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

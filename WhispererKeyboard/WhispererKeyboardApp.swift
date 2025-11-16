@@ -26,6 +26,8 @@ struct WhispererKeyboardApp: App {
     
     // Track whether we should show settings or recording view
     @State private var showSettings = false
+    @State private var showHelp = false
+    @State private var showStats = false
     @State private var openedViaURLScheme = false
     
     var body: some Scene {
@@ -34,13 +36,19 @@ struct WhispererKeyboardApp: App {
                 audio: audio,
                 transcription: transcription,
                 showSettings: $showSettings,
+                showHelp: $showHelp,
+                showStats: $showStats,
                 openedViaURLScheme: $openedViaURLScheme
             )
             .onOpenURL { url in
                 if url.scheme == "WhispererKeyboardApp" {
-                    openedViaURLScheme = true
-                    transcription.status = .recording
-                    audio.start()
+                    if url.host == "help" {
+                        showHelp = true
+                    } else {
+                        openedViaURLScheme = true
+                        transcription.status = .recording
+                        audio.start()
+                    }
                 }
             }
             .onChange(of: scenePhase) { newPhase in
@@ -58,6 +66,8 @@ struct ContentView: View {
     let audio: Audio
     @ObservedObject var transcription: Transcription
     @Binding var showSettings: Bool
+    @Binding var showHelp: Bool
+    @Binding var showStats: Bool
     @Binding var openedViaURLScheme: Bool
     @State private var refreshWelcome = false
     
@@ -79,7 +89,17 @@ struct ContentView: View {
             .navigationTitle("")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
-                ToolbarItem(placement: .navigationBarTrailing) {
+                ToolbarItemGroup(placement: .navigationBarTrailing) {
+                    Button(action: { showStats = true }) {
+                        Image(systemName: "chart.bar.fill")
+                            .font(.system(size: 18, weight: .medium))
+                    }
+                    
+                    Button(action: { showHelp = true }) {
+                        Image(systemName: "questionmark.circle.fill")
+                            .font(.system(size: 18, weight: .medium))
+                    }
+                    
                     Button(action: { showSettings = true }) {
                         Image(systemName: "gearshape.fill")
                             .font(.system(size: 18, weight: .medium))
@@ -90,6 +110,12 @@ struct ContentView: View {
                 refreshWelcome.toggle()
             }) {
                 SettingsView()
+            }
+            .sheet(isPresented: $showHelp) {
+                HelpView()
+            }
+            .sheet(isPresented: $showStats) {
+                StatsView()
             }
         }
     }
@@ -374,6 +400,8 @@ struct RecordingView: View {
         if transcription.status == .recording {
             // Request to transcribe is what stops the audio recording
             audio.stop()
+            // Track transcription invocation
+            StatsManager.shared.incrementTranscriptionCount()
             transcription.transcribe(audio.getFilename())
         } else if transcription.status == .finished {
             // Re-record: reset state and start recording again
@@ -412,4 +440,218 @@ struct RecordingView: View {
         }
     }
 }
+
+struct HelpView: View {
+    @Environment(\.dismiss) var dismiss
+    
+    var body: some View {
+        NavigationView {
+            ScrollView {
+                VStack(alignment: .leading, spacing: 24) {
+                    // Getting Started Section
+                    VStack(alignment: .leading, spacing: 12) {
+                        Text("Getting Started")
+                            .font(.system(size: 22, weight: .bold))
+                            .foregroundStyle(.primary)
+                        
+                        VStack(alignment: .leading, spacing: 8) {
+                            HelpStep(number: "1", text: "Add the Whisperer Keyboard to your device")
+                            HelpStep(number: "2", text: "Go to Settings → Keyboard → Add New Keyboard → Whisperer Keyboard")
+                            HelpStep(number: "3", text: "Enable \"Allow Full Access\" (required for transcription)")
+                            HelpStep(number: "4", text: "Open this app and add your OpenAI API key in Settings")
+                            HelpStep(number: "5", text: "Start using the keyboard in any app!")
+                        }
+                    }
+                    
+                    // How to Use Section
+                    VStack(alignment: .leading, spacing: 12) {
+                        Text("How to Use")
+                            .font(.system(size: 22, weight: .bold))
+                            .foregroundStyle(.primary)
+                        
+                        VStack(alignment: .leading, spacing: 16) {
+                            HelpFeature(
+                                icon: "mic.fill",
+                                title: "Record Button",
+                                description: "Tap the Record button to start recording audio. The app will open automatically and begin transcribing your speech."
+                            )
+                            
+                            HelpFeature(
+                                icon: "return",
+                                title: "Return Button",
+                                description: "Inserts a new line in your text field, just like the standard keyboard."
+                            )
+                            
+                            HelpFeature(
+                                icon: "delete.backward",
+                                title: "Backspace Button",
+                                description: "Deletes the character before the cursor, just like the standard keyboard."
+                            )
+                            
+                            HelpFeature(
+                                icon: "questionmark.circle",
+                                title: "Help Button",
+                                description: "Tap this button anytime to view help and instructions."
+                            )
+                        }
+                    }
+                    
+                    // Tips Section
+                    VStack(alignment: .leading, spacing: 12) {
+                        Text("Tips")
+                            .font(.system(size: 22, weight: .bold))
+                            .foregroundStyle(.primary)
+                        
+                        VStack(alignment: .leading, spacing: 8) {
+                            TipItem(text: "Speak clearly and at a normal pace for best results")
+                            TipItem(text: "Add custom vocabulary words in Settings to improve accuracy")
+                            TipItem(text: "The transcribed text will automatically appear when you return to your app")
+                            TipItem(text: "You can re-record if the transcription isn't accurate")
+                        }
+                    }
+                    
+                    // Troubleshooting Section
+                    VStack(alignment: .leading, spacing: 12) {
+                        Text("Troubleshooting")
+                            .font(.system(size: 22, weight: .bold))
+                            .foregroundStyle(.primary)
+                        
+                        VStack(alignment: .leading, spacing: 12) {
+                            TroubleshootingItem(
+                                question: "The keyboard doesn't appear",
+                                answer: "Make sure you've added the keyboard in Settings and enabled it in your keyboard list."
+                            )
+                            
+                            TroubleshootingItem(
+                                question: "Recording doesn't start",
+                                answer: "Check that you've granted microphone permissions and added your OpenAI API key in Settings."
+                            )
+                            
+                            TroubleshootingItem(
+                                question: "Transcription is inaccurate",
+                                answer: "Try speaking more clearly, add custom vocabulary words, or check your internet connection."
+                            )
+                        }
+                    }
+                }
+                .padding(20)
+            }
+            .navigationTitle("Help")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button {
+                        dismiss()
+                    } label: {
+                        Image(systemName: "checkmark")
+                            .font(.system(size: 17, weight: .semibold))
+                            .foregroundStyle(.blue)
+                    }
+                }
+            }
+        }
+    }
+}
+
+struct HelpStep: View {
+    let number: String
+    let text: String
+    
+    var body: some View {
+        HStack(alignment: .top, spacing: 12) {
+            Text(number)
+                .font(.system(size: 16, weight: .semibold))
+                .foregroundStyle(.white)
+                .frame(width: 24, height: 24)
+                .background {
+                    Circle()
+                        .fill(.blue)
+                }
+            
+            Text(text)
+                .font(.system(size: 16, weight: .regular))
+                .foregroundStyle(.primary)
+                .fixedSize(horizontal: false, vertical: true)
+            
+            Spacer()
+        }
+    }
+}
+
+struct HelpFeature: View {
+    let icon: String
+    let title: String
+    let description: String
+    
+    var body: some View {
+        HStack(alignment: .top, spacing: 12) {
+            Image(systemName: icon)
+                .font(.system(size: 18, weight: .medium))
+                .foregroundStyle(.blue)
+                .frame(width: 24)
+            
+            VStack(alignment: .leading, spacing: 4) {
+                Text(title)
+                    .font(.system(size: 17, weight: .semibold))
+                    .foregroundStyle(.primary)
+                
+                Text(description)
+                    .font(.system(size: 15, weight: .regular))
+                    .foregroundStyle(.secondary)
+                    .fixedSize(horizontal: false, vertical: true)
+            }
+            
+            Spacer()
+        }
+    }
+}
+
+struct TipItem: View {
+    let text: String
+    
+    var body: some View {
+        HStack(alignment: .top, spacing: 8) {
+            Image(systemName: "lightbulb.fill")
+                .font(.system(size: 14, weight: .medium))
+                .foregroundStyle(.yellow)
+                .frame(width: 20)
+            
+            Text(text)
+                .font(.system(size: 15, weight: .regular))
+                .foregroundStyle(.primary)
+                .fixedSize(horizontal: false, vertical: true)
+            
+            Spacer()
+        }
+    }
+}
+
+struct TroubleshootingItem: View {
+    let question: String
+    let answer: String
+    
+    var body: some View {
+        VStack(alignment: .leading, spacing: 6) {
+            HStack(alignment: .top, spacing: 8) {
+                Image(systemName: "questionmark.circle.fill")
+                    .font(.system(size: 16, weight: .medium))
+                    .foregroundStyle(.orange)
+                    .frame(width: 20)
+                
+                Text(question)
+                    .font(.system(size: 16, weight: .semibold))
+                    .foregroundStyle(.primary)
+                
+                Spacer()
+            }
+            
+            Text(answer)
+                .font(.system(size: 15, weight: .regular))
+                .foregroundStyle(.secondary)
+                .padding(.leading, 28)
+                .fixedSize(horizontal: false, vertical: true)
+        }
+    }
+}
+
 

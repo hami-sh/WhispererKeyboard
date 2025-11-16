@@ -20,6 +20,10 @@
 		D3F98B382EC98E5B000B8154 /* StatsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3F98B372EC98E5B000B8154 /* StatsManager.swift */; };
 		D3F98B392EC98E5B000B8154 /* StatsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3F98B372EC98E5B000B8154 /* StatsManager.swift */; };
 		D3F98B3B2EC98F34000B8154 /* StatsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3F98B3A2EC98F34000B8154 /* StatsView.swift */; };
+		D3F98B442EC9927C000B8154 /* KeyboardPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3F98B432EC9927C000B8154 /* KeyboardPreview.swift */; };
+		D3F98B452EC9927C000B8154 /* KeyboardPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3F98B432EC9927C000B8154 /* KeyboardPreview.swift */; };
+		D3F98B482EC997C4000B8154 /* KeyboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3F98B472EC997C4000B8154 /* KeyboardView.swift */; };
+		D3F98B492EC997C4000B8154 /* KeyboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3F98B472EC997C4000B8154 /* KeyboardView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -64,6 +68,8 @@
 		D3F98B312EC95AB5000B8154 /* SoundVisualizer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SoundVisualizer.swift; sourceTree = "<group>"; };
 		D3F98B372EC98E5B000B8154 /* StatsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatsManager.swift; sourceTree = "<group>"; };
 		D3F98B3A2EC98F34000B8154 /* StatsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatsView.swift; sourceTree = "<group>"; };
+		D3F98B432EC9927C000B8154 /* KeyboardPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyboardPreview.swift; sourceTree = "<group>"; };
+		D3F98B472EC997C4000B8154 /* KeyboardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyboardView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -134,7 +140,9 @@
 			isa = PBXGroup;
 			children = (
 				5F5DF0822AB643FA00BAE883 /* keyboard.entitlements */,
+				D3F98B472EC997C4000B8154 /* KeyboardView.swift */,
 				5F52631C2AB029F60087E46B /* KeyboardViewController.swift */,
+				D3F98B432EC9927C000B8154 /* KeyboardPreview.swift */,
 				5F52631E2AB029F60087E46B /* Info.plist */,
 			);
 			path = keyboard;
@@ -256,6 +264,8 @@
 				D3F98B242EC943A7000B8154 /* SettingsView.swift in Sources */,
 				D3F98B322EC95AB5000B8154 /* SoundVisualizer.swift in Sources */,
 				5F6738982ACB8C8900F83932 /* Audio.swift in Sources */,
+				D3F98B482EC997C4000B8154 /* KeyboardView.swift in Sources */,
+				D3F98B452EC9927C000B8154 /* KeyboardPreview.swift in Sources */,
 				5F6738962ACB8BEF00F83932 /* Transcription.swift in Sources */,
 				D3F98B3B2EC98F34000B8154 /* StatsView.swift in Sources */,
 				5F5263092AB027D90087E46B /* WhispererKeyboardApp.swift in Sources */,
@@ -269,7 +279,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				5F52631D2AB029F60087E46B /* KeyboardViewController.swift in Sources */,
+				D3F98B492EC997C4000B8154 /* KeyboardView.swift in Sources */,
 				D3F98B392EC98E5B000B8154 /* StatsManager.swift in Sources */,
+				D3F98B442EC9927C000B8154 /* KeyboardPreview.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
